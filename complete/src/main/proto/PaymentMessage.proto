@@ -1,0 +1,69 @@
+package payment;
+
+option java_package = "com.aig.exchange.payment.message";
+option optimize_for = SPEED;
+enum Status {
+    SUCC = 0;
+    CANCEL = -1;
+    FAILED = 1;
+}
+enum PaymentSource {
+    Poli = 0;
+    BPay = 1;
+    Bank = 2;
+    Paypal = 3;
+}
+
+message PaymentFeedback {
+    optional PaymentSource source = 1;
+    optional string reference = 2;
+    optional Status status = 3;
+    optional Timestamp time = 4;
+    optional PaymentRequest request = 5;
+    optional double amount = 6;
+    optional string uid = 7;
+    optional string bankRef=8;
+    optional string currency=9;
+    optional string tnxid = 10;
+    optional string commnent=11;
+}
+
+message PaymentRequest {
+    optional PaymentSource source = 1;
+    optional string reference = 2;
+    optional double amount = 3;
+    optional Timestamp requestTime = 4;
+    optional string requestId = 5;
+    optional string uid=6;
+    optional string bankRef=7;
+    optional string currency=8;
+}
+
+message PoliUrlResponse{
+    optional int32 status = 1; //0 succeed, else failed.
+    optional string message=2;   //if succeed, it is URL, else error message
+    optional PaymentRequest request = 3;
+}
+
+message Timestamp {
+
+    // Represents seconds of UTC time since Unix epoch
+    // 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+    // 9999-12-31T23:59:59Z inclusive.
+    optional int64 seconds = 1;
+
+    // Non-negative fractions of a second at nanosecond resolution. Negative
+    // second values with fractions must still have non-negative nanos values
+    // that count forward in time. Must be from 0 to 999,999,999
+    // inclusive.
+    optional int32 nanos = 2;
+}
+
+//bpayment will be exported to a file. The parsed result will save to kafka for futher processing
+message BpaymentParsed {
+    optional double amnount=1;
+    optional string ref=2;
+    optional string toAccount=3;
+    optional string strDate=4;
+    optional string bankSeries=5;
+}
